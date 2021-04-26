@@ -27,6 +27,7 @@ import {
   LearnMoreLinks,
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
+import Person from './src/Person';
 
 function App() {
   const [name, setName] = useState('Ho');
@@ -54,6 +55,9 @@ function App() {
       <View style={styles.buttonContainer}>
         <Button title="updat state" />
       </View>
+      <View>
+        <Person />
+      </View>
     </View>
   );
 }
@@ -76,14 +80,6 @@ const styles = StyleSheet.create({
     margin: 10,
     width: 200,
   },
-  // boldText: {
-  //   fontWeight: 'bold',
-  // },
-  // body: {
-  //   backgroundColor: 'yellow',
-  //   padding: 20,
-  //   fontWeight: 'bold',
-  // },
 });
 
 export default App;
