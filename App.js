@@ -1,85 +1,81 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- * @flow strict-local
- */
-
 import React, {useState} from 'react';
 // import type {Node} from 'react';
 import {
-  Button,
-  SafeAreaView,
-  ScrollView,
-  StatusBar,
   StyleSheet,
   Text,
-  useColorScheme,
   View,
-  TextInput,
+  FlatList,
+  Alert,
+  TouchableWithoutFeedback,
+  Keyboard,
 } from 'react-native';
+import AddTodo from './src/components/addTodo';
+import Header from './src/components/header';
+import TodoItem from './src/components/todoItem';
 
-import {
-  Colors,
-  DebugInstructions,
-  Header,
-  LearnMoreLinks,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
-import Person from './src/Person';
+export default function App() {
+  const [todos, setTodos] = useState([
+    {text: 'react 복습하기', key: '1'},
+    {text: 'typescript 공부하기', key: '2'},
+    {text: 'computer science 공부하기', key: '3'},
+  ]);
 
-function App() {
-  const [name, setName] = useState('Ho');
-  const [age, setAge] = useState('27');
+  const pressHandler = key => {
+    setTodos(prevTodos => {
+      return prevTodos.filter(todo => todo.key !== key);
+    });
+  };
+
+  const submitHandler = text => {
+    if (text.length > 3) {
+      setTodos(prevTodos => {
+        return [{text: text, key: Math.random().toString()}, ...prevTodos];
+      });
+    } else {
+      Alert.alert('OOPS!', 'todos must be over 3chars long', [
+        {
+          text: 'Understood',
+          onPress: () => console.log('alert closed'),
+        },
+      ]);
+    }
+  };
 
   return (
-    <View style={styles.Container}>
-      <Text>Enter your name : </Text>
-      <TextInput
-        multiline
-        style={styles.input}
-        placeholder="e.g. John Doe"
-        onChangeText={value => setName(value)}
-      />
-      <Text>Enter your age : </Text>
-      <TextInput
-        style={styles.input}
-        placeholder="e.g. 20"
-        onChangeText={value => setAge(value)}
-      />
-
-      <Text>
-        My name is {name} and my age is {age}
-      </Text>
-      <View style={styles.buttonContainer}>
-        <Button title="updat state" />
+    <TouchableWithoutFeedback
+      onPress={() => {
+        Keyboard.dismiss();
+      }}>
+      <View style={styles.container}>
+        <Header />
+        <View style={styles.content}>
+          <AddTodo submitHandler={submitHandler} />
+          <View style={styles.list}>
+            <FlatList
+              data={todos}
+              renderItem={({item}) => (
+                <TodoItem item={item} pressHandler={pressHandler} />
+              )}
+            />
+          </View>
+        </View>
       </View>
-      <View>
-        <Person />
-      </View>
-    </View>
+    </TouchableWithoutFeedback>
   );
 }
 
 const styles = StyleSheet.create({
-  Container: {
+  container: {
     flex: 1,
     backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingHorizontal: 24,
   },
-  buttonContainer: {
+  content: {
+    padding: 40,
+    backgroundColor: 'aliceblue',
+    flex: 1,
+  },
+  list: {
+    flex: 1,
     marginTop: 20,
   },
-  input: {
-    borderWidth: 1,
-    borderColor: '#777',
-    padding: 8,
-    margin: 10,
-    width: 200,
-  },
 });
-
-export default App;
